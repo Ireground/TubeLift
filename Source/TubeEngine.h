@@ -115,9 +115,9 @@ namespace tl
 
         int latency() const { return os ? juce::roundToInt (os->getLatencyInSamples()) : 0; }
 
-        static float driveToGain (float drive) // 0..10 -> -6..+36 dB into the first triode
+        static float driveToGain (float drive) // 0..10 -> -12..+16 dB into the first triode
         {
-            return juce::Decibels::decibelsToGain (-6.0f + drive * 4.2f);
+            return juce::Decibels::decibelsToGain (-12.0f + drive * 2.8f);
         }
 
         // Static level match: a -12 dBFS signal leaves at roughly the level it came in, whatever

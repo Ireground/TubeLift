@@ -57,15 +57,18 @@ TubeLiftEditor::TubeLiftEditor (TubeLiftProcessor& p)
         { "mix",     "MIX",      R (432, 276, 184, 26), 62, 70, cPurple, false },
     };
 
+    // Read the saved size BEFORE setting resize limits: setResizeLimits() triggers resized()
+    // at the minimum size, which used to overwrite the saved scale with 75%.
+    const float s = juce::jlimit (0.75f, 2.5f, proc.uiScale.load());
     setResizable (true, true);
     setResizeLimits (W * 3 / 4, H * 3 / 4, W * 5 / 2, H * 5 / 2);
     if (auto* c = getConstrainer()) c->setFixedAspectRatio ((double) W / (double) H);
-    const float s = juce::jlimit (0.75f, 2.5f, proc.uiScale.load());
     setSize (juce::roundToInt (W * s), juce::roundToInt (H * s));
+    sizeReady = true;
     startTimerHz (30);
 }
 
-void TubeLiftEditor::resized() { proc.uiScale = uiScale(); }
+void TubeLiftEditor::resized() { if (sizeReady) proc.uiScale = uiScale(); }
 
 void TubeLiftEditor::timerCallback()
 {
